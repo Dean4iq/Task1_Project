@@ -74,8 +74,8 @@
                  </c:forEach>
              </table>
              <br><br>
-             <input type="submit" name="uniteRows" value="Unite rows"/>
-             <input type="submit" name="deleteRows" value="Delete rows"/>
+             <input type="submit" name="uniteRows" value="${buttonUnite}"/>
+             <input type="submit" name="deleteRows" value="${buttonDelete}"/>
          </form>
 
          <h2>${inputDeclaration}</h2><br />
@@ -103,7 +103,7 @@
                     <td><input type="text" name="id"></td>
                 </tr>
             </table>
-             <input type="submit" value="Ok" name="addValue"><br>
+             <input type="submit" value="${buttonAdd}" name="addValue"><br>
         </form>
     </body>
 </html>

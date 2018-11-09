@@ -49,6 +49,12 @@ public class ContactFormServlet extends HttpServlet {
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.INPUT_DECLARATION.getLocaleSource())).array()));
 
+        request.setAttribute("buttonUnite",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_UNITE.getLocaleSource())).array()));
+        request.setAttribute("buttonDelete",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_DELETE.getLocaleSource())).array()));
+        request.setAttribute("buttonAdd",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_ADD.getLocaleSource())).array()));
         request.getRequestDispatcher("/view/index.jsp").forward(request, response);
     }
 
@@ -106,6 +112,7 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     private void addValueToList(HttpServletRequest req) {
+
         AddingValueToDBService.addValueToList(req, controller);
     }
 }
