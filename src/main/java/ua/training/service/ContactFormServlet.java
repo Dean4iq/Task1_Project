@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ContactFormServlet extends HttpServlet {
     private static Controller controller;
@@ -22,32 +23,30 @@ public class ContactFormServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
 
-        //req.setAttribute("contacts", controller.getFullContactDataList());
-        req.setAttribute("greeting",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.GREETING_MESSAGE.getLocaleSource()));
+        req.setAttribute("contacts", controller.getFullContactDataList());
         req.setAttribute("tableDescription",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource())).array()));
         req.setAttribute("nameColumn",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.NAME_COLUMN.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.NAME_COLUMN.getLocaleSource())).array()));
         req.setAttribute("lastNameColumn",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.LASTNAME_COLUMN.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.LASTNAME_COLUMN.getLocaleSource())).array()));
         req.setAttribute("nicknameColumn",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.NICKNAME_COLUMN.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.NICKNAME_COLUMN.getLocaleSource())).array()));
         req.setAttribute("phoneColumn",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.PHONE_COLUMN.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.PHONE_COLUMN.getLocaleSource())).array()));
         req.setAttribute("idColumn",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.ID_COLUMN.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.ID_COLUMN.getLocaleSource())).array()));
         req.setAttribute("inputDeclaration",
-                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.INPUT_DECLARATION.getLocaleSource()));
+                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.INPUT_DECLARATION.getLocaleSource())).array()));
 
         req.getRequestDispatcher("/view/index.jsp").forward(req, resp);
     }
@@ -76,46 +75,28 @@ public class ContactFormServlet extends HttpServlet {
         if (req.getParameter("uniteRows") != null) {
             uniteRows();
         }
+        if (req.getParameter("setLanguage") != null) {
+            req.setAttribute("langVariable", req.getParameter("language"));
+            changeLocalizationSettings(req.getParameter("language"));
+        }
 
         doGet(req, resp);
     }
 
     private void sortValuesInTable(String query) {
-        controller.setFullContactDataList(controller.executeDBQuery(query));
+        controller.setFullContactDataList(controller.executeSortingDBQuery(query));
     }
 
     private void uniteRows() {
         //TODO
+        UnitingService.uniteRows();
+    }
+
+    private void changeLocalizationSettings(String language) {
+        controller.setResourceBundles(language);
     }
 
     private void addValueToList(HttpServletRequest req) {
-        final String name = req.getParameter("name");
-        final String lastName = req.getParameter("lastname");
-        final String nickname = req.getParameter("nickname");
-        final String phone = req.getParameter("phone");
-        final String id = req.getParameter("id");
-
-        if (!name.equals("") || !lastName.equals("") || !nickname.equals("") ||
-                !phone.equals("") || !id.equals("")) {
-            final FullContactData fullContactData = new FullContactData();
-
-            if (!name.equals("")) {
-                fullContactData.setName(new NameContact(name));
-            }
-            if (!lastName.equals("")) {
-                fullContactData.setLastName(new LastNameContact(lastName));
-            }
-            if (!nickname.equals("")) {
-                fullContactData.setNickname(new NicknameContact(nickname));
-            }
-            if (!phone.equals("")) {
-                fullContactData.setPhone(new PhoneContact(phone));
-            }
-            if (!id.equals("")) {
-                fullContactData.setId(new IdContact(id));
-            }
-
-            controller.addContactToList(fullContactData);
-        }
+        AddingValueToDBService.addValueToList(req, controller);
     }
 }

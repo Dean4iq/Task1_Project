@@ -6,44 +6,43 @@ import ua.training.util.DBQueries;
 import ua.training.util.LocalizationLinks;
 import ua.training.util.RegExLinks;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Controller {
+class Controller {
     private ResourceBundle regexResourceBundle;
     private ResourceBundle messageResourceBundle;
     private List<FullContactData> fullContactDataList;
     private DBConnector dbConnector;
 
-    public Controller() {
+    Controller() {
         regexResourceBundle =
                 ResourceBundle.getBundle(RegExLinks.SOURCE.getRegExSource(),
-                        new Locale("en"));
+                        new Locale("ua"));
         messageResourceBundle =
                 ResourceBundle.getBundle(LocalizationLinks.SOURCE.getLocaleSource(),
-                        new Locale("en"));
+                        new Locale("ua"));
 
         dbConnector = new DBConnector();
         fullContactDataList = getDataFromDatabase();
 
     }
 
-    public static String getStringFromBundle(ResourceBundle resourceBundle,
+    static String getStringFromBundle(ResourceBundle resourceBundle,
                                              String message) {
         return resourceBundle.getString(message);
     }
 
-    public ResourceBundle getRegexResourceBundle() {
+    ResourceBundle getRegexResourceBundle() {
         return regexResourceBundle;
     }
 
-    public ResourceBundle getMessageResourceBundle() {
+    ResourceBundle getMessageResourceBundle() {
         return messageResourceBundle;
     }
 
-    public void setResourceBundles(String locale) {
+    void setResourceBundles(String locale) {
         this.regexResourceBundle =
                 ResourceBundle.getBundle(RegExLinks.SOURCE.getRegExSource(),
                         new Locale(locale));
@@ -52,17 +51,19 @@ public class Controller {
                         new Locale(locale));
     }
 
-    public List<FullContactData> executeDBQuery(String query) {
+    List<FullContactData> executeSortingDBQuery(String query) {
         dbConnector.checkDataBaseTable();
-        return dbConnector.getSortedDataFromTable(query);
+        fullContactDataList = dbConnector.getSortedDataFromTable(query);
+        return fullContactDataList;
     }
 
-    public List<FullContactData> getDataFromDatabase() {
+    List<FullContactData> getDataFromDatabase() {
         dbConnector.checkDataBaseTable();
-        return dbConnector.getDataFromTable();
+        fullContactDataList = dbConnector.getDataFromTable();
+        return fullContactDataList;
     }
 
-    public void addContactToList(FullContactData fullContactData) {
+    void addContactToList(FullContactData fullContactData) {
         StringBuilder query = new StringBuilder().append(DBQueries.HEADER_INSERT_TO_DB);
         StringBuilder queryValues = new StringBuilder().append("(");
         if (fullContactData.getName() != null) {
@@ -92,16 +93,17 @@ public class Controller {
             query.deleteCharAt(query.length() - 1);
         }
         query.append(")");
-        queryValues.append(");");
-        System.out.println(query.append(" VALUES ").append(queryValues).toString());
+        queryValues.append(")");
         dbConnector.executeQuery(query.append(" VALUES ").append(queryValues).toString());
+
+        fullContactDataList = getDataFromDatabase();
     }
 
     public List<FullContactData> getFullContactDataList() {
         return fullContactDataList;
     }
 
-    public void setFullContactDataList(List<FullContactData> fullContactDataList) {
+    void setFullContactDataList(List<FullContactData> fullContactDataList) {
         this.fullContactDataList = fullContactDataList;
     }
 }

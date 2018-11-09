@@ -2,7 +2,6 @@ package ua.training.util;
 
 public enum LocalizationLinks {
     SOURCE("messages"),
-    GREETING_MESSAGE("message.greeting"),
     TABLE_DESCRIPTION("table.description"),
     NAME_COLUMN("output.column.name"),
     LASTNAME_COLUMN("output.column.lastname"),
