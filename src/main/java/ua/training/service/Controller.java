@@ -19,18 +19,22 @@ class Controller {
     Controller() {
         regexResourceBundle =
                 ResourceBundle.getBundle(RegExLinks.SOURCE.getRegExSource(),
-                        new Locale("ua"));
+                        new Locale("de"));
         messageResourceBundle =
                 ResourceBundle.getBundle(LocalizationLinks.SOURCE.getLocaleSource(),
-                        new Locale("ua"));
+                        new Locale("de"));
 
         dbConnector = new DBConnector();
         fullContactDataList = getDataFromDatabase();
 
     }
 
+    public DBConnector getDbConnector() {
+        return dbConnector;
+    }
+
     static String getStringFromBundle(ResourceBundle resourceBundle,
-                                             String message) {
+                                      String message) {
         return resourceBundle.getString(message);
     }
 

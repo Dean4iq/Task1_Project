@@ -1,6 +1,7 @@
 package ua.training.model;
 
 public class FullContactData {
+    private int rowId;
     private NameContact name;
     private LastNameContact lastName;
     private NicknameContact nickname;
@@ -17,6 +18,14 @@ public class FullContactData {
         this.nickname = nickname;
         this.phone = phone;
         this.id = id;
+    }
+
+    public int getRowId() {
+        return rowId;
+    }
+
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
     }
 
     public NameContact getName() {

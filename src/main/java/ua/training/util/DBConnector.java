@@ -43,6 +43,7 @@ public final class DBConnector {
                         new NicknameContact(resultSet.getString("nickname")),
                         new PhoneContact(resultSet.getString("phone")),
                         new IdContact(resultSet.getString("id"))));
+                result.get(result.size()-1).setRowId(resultSet.getInt("db_id"));
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -65,6 +66,7 @@ public final class DBConnector {
                         new NicknameContact(resultSet.getString("nickname")),
                         new PhoneContact(resultSet.getString("phone")),
                         new IdContact(resultSet.getString("id"))));
+                result.get(result.size()-1).setRowId(resultSet.getInt("db_id"));
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());

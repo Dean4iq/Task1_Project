@@ -20,76 +20,85 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
-        req.setAttribute("contacts", controller.getFullContactDataList());
-        req.setAttribute("tableDescription",
+        request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
+        request.setAttribute("contacts", controller.getFullContactDataList());
+        request.setAttribute("tableDescription",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource())).array()));
-        req.setAttribute("nameColumn",
+        request.setAttribute("nameColumn",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.NAME_COLUMN.getLocaleSource())).array()));
-        req.setAttribute("lastNameColumn",
+        request.setAttribute("lastNameColumn",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.LASTNAME_COLUMN.getLocaleSource())).array()));
-        req.setAttribute("nicknameColumn",
+        request.setAttribute("nicknameColumn",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.NICKNAME_COLUMN.getLocaleSource())).array()));
-        req.setAttribute("phoneColumn",
+        request.setAttribute("phoneColumn",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.PHONE_COLUMN.getLocaleSource())).array()));
-        req.setAttribute("idColumn",
+        request.setAttribute("idColumn",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.ID_COLUMN.getLocaleSource())).array()));
-        req.setAttribute("inputDeclaration",
+        request.setAttribute("inputDeclaration",
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.INPUT_DECLARATION.getLocaleSource())).array()));
 
-        req.getRequestDispatcher("/view/index.jsp").forward(req, resp);
+        request.getRequestDispatcher("/view/index.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req,
-                          HttpServletResponse resp)
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
             throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-        if (req.getParameter("addValue") != null) {
-            addValueToList(req);
+        if (request.getParameter("addValue") != null) {
+            addValueToList(request);
         }
-        if (req.getParameter("sortNameAsc") != null) {
+        if (request.getParameter("sortNameAsc") != null) {
             sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_ASC);
         }
-        if (req.getParameter("sortNameDesc") != null) {
+        if (request.getParameter("sortNameDesc") != null) {
             sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_DESC);
         }
-        if (req.getParameter("sortLastNameAsc") != null) {
+        if (request.getParameter("sortLastNameAsc") != null) {
             sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_ASC);
         }
-        if (req.getParameter("sortLastNameDesc") != null) {
+        if (request.getParameter("sortLastNameDesc") != null) {
             sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_DESC);
         }
-        if (req.getParameter("uniteRows") != null) {
-            uniteRows();
+        if (request.getParameter("uniteRows") != null) {
+            uniteRows(request);
         }
-        if (req.getParameter("setLanguage") != null) {
-            req.setAttribute("langVariable", req.getParameter("language"));
-            changeLocalizationSettings(req.getParameter("language"));
+        if (request.getParameter("deleteRows") != null) {
+            deleteRows(request);
+        }
+        if (request.getParameter("setLanguage") != null) {
+            request.setAttribute("langVariable", request.getParameter("language"));
+            changeLocalizationSettings(request.getParameter("language"));
         }
 
-        doGet(req, resp);
+        doGet(request, response);
     }
 
     private void sortValuesInTable(String query) {
         controller.setFullContactDataList(controller.executeSortingDBQuery(query));
     }
 
-    private void uniteRows() {
+    private void uniteRows(HttpServletRequest request) {
         //TODO
-        UnitingService.uniteRows();
+        UnitingService.uniteRows(request, controller);
+    }
+
+    private void deleteRows(HttpServletRequest request) {
+        //TODO
+        DeletingRowsService.deleteRows(request, controller);
     }
 
     private void changeLocalizationSettings(String language) {
