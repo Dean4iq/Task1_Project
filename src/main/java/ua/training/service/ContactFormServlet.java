@@ -1,6 +1,5 @@
 package ua.training.service;
 
-import ua.training.model.*;
 import ua.training.util.DBQueries;
 import ua.training.util.LocalizationLinks;
 
@@ -10,13 +9,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ContactFormServlet extends HttpServlet {
-    private static Controller controller;
+    private final Controller controller = new Controller();
+    private final Map<String, Handler> commandMap = new HashMap<>();
 
     @Override
     public void init() throws ServletException {
-        controller = new Controller();
+        commandMap.put("addValue", object -> addValueToList((HttpServletRequest)object));
+        commandMap.put("sortNameAsc",
+                object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_ASC));
+        commandMap.put("sortNameDesc",
+                object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_DESC));
+        commandMap.put("sortLastNameAsc",
+                object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_ASC));
+        commandMap.put("sortLastNameDesc",
+                object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_DESC));
+        commandMap.put("uniteRows",
+                object -> uniteRows((HttpServletRequest)object));
+        commandMap.put("deleteRows",
+                object -> deleteRows((HttpServletRequest)object));
+        commandMap.put("setLanguage", object -> {
+            ((HttpServletRequest)object)
+                    .setAttribute("langVariable",
+                            ((HttpServletRequest)object).getParameter("language"));
+            changeLocalizationSettings(((HttpServletRequest)object)
+                    .getParameter("language"));
+        });
     }
 
     @Override
@@ -49,11 +70,11 @@ public class ContactFormServlet extends HttpServlet {
                 new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.INPUT_DECLARATION.getLocaleSource())).array()));
 
-        request.setAttribute("buttonUnite",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonUnite", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_UNITE.getLocaleSource())).array()));
-        request.setAttribute("buttonDelete",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonDelete", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_DELETE.getLocaleSource())).array()));
-        request.setAttribute("buttonAdd",new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonAdd", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_ADD.getLocaleSource())).array()));
         request.getRequestDispatcher("/view/index.jsp").forward(request, response);
     }
@@ -64,31 +85,9 @@ public class ContactFormServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        if (request.getParameter("addValue") != null) {
-            addValueToList(request);
-        }
-        if (request.getParameter("sortNameAsc") != null) {
-            sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_ASC);
-        }
-        if (request.getParameter("sortNameDesc") != null) {
-            sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_DESC);
-        }
-        if (request.getParameter("sortLastNameAsc") != null) {
-            sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_ASC);
-        }
-        if (request.getParameter("sortLastNameDesc") != null) {
-            sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_DESC);
-        }
-        if (request.getParameter("uniteRows") != null) {
-            uniteRows(request);
-        }
-        if (request.getParameter("deleteRows") != null) {
-            deleteRows(request);
-        }
-        if (request.getParameter("setLanguage") != null) {
-            request.setAttribute("langVariable", request.getParameter("language"));
-            changeLocalizationSettings(request.getParameter("language"));
-        }
+        commandMap.entrySet().stream()
+                .filter(elem -> request.getParameter(elem.getKey()) != null)
+                .findFirst().get().getValue().handle(request);
 
         doGet(request, response);
     }
@@ -98,12 +97,10 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     private void uniteRows(HttpServletRequest request) {
-        //TODO
         UnitingService.uniteRows(request, controller);
     }
 
     private void deleteRows(HttpServletRequest request) {
-        //TODO
         DeletingRowsService.deleteRows(request, controller);
     }
 
@@ -115,4 +112,8 @@ public class ContactFormServlet extends HttpServlet {
 
         AddingValueToDBService.addValueToList(req, controller);
     }
+}
+
+interface Handler {
+    void handle(Object object);
 }

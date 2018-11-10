@@ -9,7 +9,6 @@ class DeletingRowsService {
     private DeletingRowsService(){}
 
     static void deleteRows(HttpServletRequest request, Controller controller){
-        //TODO
         String[] selectedRowsId = request.getParameterValues("selectedRows");
 
         StringBuilder stringBuilder = new StringBuilder().append(DBQueries.DELETE_BY_ID_QUERY);
