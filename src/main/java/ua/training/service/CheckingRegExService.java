@@ -5,7 +5,9 @@ import ua.training.util.RegExLinks;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CheckingRegExService {
+class CheckingRegExService {
+    private CheckingRegExService(){}
+
     static Map<String, String> getRegexStrings(Controller controller) {
         Map<String, String> regexMap = new HashMap<>();
         regexMap.put("regexName",
