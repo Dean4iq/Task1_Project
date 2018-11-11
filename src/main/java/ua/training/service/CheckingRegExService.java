@@ -2,11 +2,13 @@ package ua.training.service;
 
 import ua.training.util.RegExLinks;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 class CheckingRegExService {
-    private CheckingRegExService(){}
+    private CheckingRegExService() {
+    }
 
     static Map<String, String> getRegexStrings(Controller controller) {
         Map<String, String> regexMap = new HashMap<>();
@@ -27,5 +29,13 @@ class CheckingRegExService {
                         RegExLinks.ID_REGEX.getRegExSource()));
 
         return regexMap;
+    }
+
+    static boolean checkRegexString(String stringToCheck,
+                                    String checkedField, Controller controller) {
+        return stringToCheck
+                .matches(Controller.getStringFromBundle(controller.getRegexResourceBundle(),
+                        RegExLinks.valueOf(checkedField).getRegExSource()));
+
     }
 }
