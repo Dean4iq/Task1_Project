@@ -11,7 +11,11 @@ public enum LocalizationLinks {
     INPUT_DECLARATION("input.msg"),
     BUTTON_UNITE("button.msg.unite"),
     BUTTON_DELETE("button.msg.delete"),
-    BUTTON_ADD("button.msg.add");
+    BUTTON_ADD("button.msg.add"),
+    FAQ_SORT_INFO("faq.info.sort"),
+    FAQ_INPUT_INFO("faq.info.input"),
+    FAQ_DELETE_INFO("faq.info.delete"),
+    FAQ_UNITE_INFO("faq.info.unite");
 
     String localeSource;
 

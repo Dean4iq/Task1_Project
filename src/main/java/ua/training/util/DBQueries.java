@@ -20,4 +20,5 @@ public interface DBQueries {
     String GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_DESC = "SELECT * FROM fullcontactdata ORDER BY lastname DESC";
     String HEADER_INSERT_TO_DB = "INSERT INTO fullcontactdata (";
     String DELETE_BY_ID_QUERY = "DELETE FROM fullcontactdata WHERE db_id IN (";
+    String HEADER_SELECT_FROM_WHERE_ID = "SELECT * FROM fullcontactdata WHERE id IN (";
 }
