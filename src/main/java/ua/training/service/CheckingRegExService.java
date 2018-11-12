@@ -58,19 +58,19 @@ class CheckingRegExService {
                     fullContactData.getName().getContactData());
         }
         if (fullContactData.getLastName() != null) {
-            contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
+            contactDatalist.put(RegExLinks.LAST_NAME_REGEX.getRegExSource(),
                     fullContactData.getLastName().getContactData());
         }
         if (fullContactData.getNickname() != null) {
-            contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
+            contactDatalist.put(RegExLinks.NICKNAME_REGEX.getRegExSource(),
                     fullContactData.getNickname().getContactData());
         }
         if (fullContactData.getPhone() != null) {
-            contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
+            contactDatalist.put(RegExLinks.PHONE_REGEX.getRegExSource(),
                     fullContactData.getPhone().getContactData());
         }
         if (fullContactData.getId() != null) {
-            contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
+            contactDatalist.put(RegExLinks.ID_REGEX.getRegExSource(),
                     fullContactData.getId().getContactData());
         }
 
