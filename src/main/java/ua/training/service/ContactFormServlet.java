@@ -98,6 +98,23 @@ public class ContactFormServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    private String buildFAQContent(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<p>")
+                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.FAQ_SORT_INFO.getLocaleSource())).append("</p>")
+                .append("<p>")
+                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.FAQ_INPUT_INFO.getLocaleSource())).append("</p>")
+                .append("<p>")
+                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.FAQ_DELETE_INFO.getLocaleSource())).append("</p>")
+                .append("<p>")
+                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.FAQ_UNITE_INFO.getLocaleSource())).append("</p>");
+        return stringBuilder.toString();
+    }
+
     private void sortValuesInTable(String query) {
         controller.setFullContactDataList(controller.executeSortingDBQuery(query));
     }
@@ -115,7 +132,6 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     private void addValueToList(HttpServletRequest req) {
-
         AddingValueToDBService.addValueToList(req, controller);
     }
 }
