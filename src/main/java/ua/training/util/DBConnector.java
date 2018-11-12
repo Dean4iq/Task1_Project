@@ -118,7 +118,6 @@ public final class DBConnector {
     public void executeUpdateQuery(String query) {
         try (Statement statement = dbConnection.createStatement()) {
             statement.executeUpdate(query);
-            System.out.println(query);
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());

@@ -46,7 +46,7 @@ public class ContactFormServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
-        request.setAttribute("contacts", controller.getFullContactDataList());
+        request.setAttribute("contacts", controller.getDataFromDatabase());
         request.setAttribute("tableDescription",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource()));
