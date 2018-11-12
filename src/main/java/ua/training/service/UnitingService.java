@@ -7,5 +7,6 @@ class UnitingService {
 
     static void uniteRows(HttpServletRequest request, Controller controller){
         //TODO
+
     }
 }

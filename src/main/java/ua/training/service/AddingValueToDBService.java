@@ -1,7 +1,6 @@
 package ua.training.service;
 
 import ua.training.model.*;
-import ua.training.util.RegExLinks;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,12 +8,12 @@ class AddingValueToDBService {
     private AddingValueToDBService() {
     }
 
-    static void addValueToList(HttpServletRequest req, Controller controller) {
-        final String name = req.getParameter("name");
-        final String lastName = req.getParameter("lastname");
-        final String nickname = req.getParameter("nickname");
-        final String phone = req.getParameter("phone");
-        final String id = req.getParameter("id");
+    static void addValueToList(HttpServletRequest request, Controller controller) {
+        final String name = request.getParameter("name");
+        final String lastName = request.getParameter("lastname");
+        final String nickname = request.getParameter("nickname");
+        final String phone = request.getParameter("phone");
+        final String id = request.getParameter("id");
 
         if (!name.equals("") || !lastName.equals("") || !nickname.equals("")
                 || !phone.equals("") || !id.equals("")) {

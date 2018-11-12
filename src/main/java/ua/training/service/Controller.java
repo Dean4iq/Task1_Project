@@ -30,7 +30,7 @@ class Controller {
 
     }
 
-    public DBConnector getDbConnector() {
+    DBConnector getDbConnector() {
         return dbConnector;
     }
 
@@ -104,7 +104,7 @@ class Controller {
         fullContactDataList = getDataFromDatabase();
     }
 
-    public List<FullContactData> getFullContactDataList() {
+    List<FullContactData> getFullContactDataList() {
         return fullContactDataList;
     }
 
