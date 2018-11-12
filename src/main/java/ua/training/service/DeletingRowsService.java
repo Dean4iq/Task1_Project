@@ -14,7 +14,7 @@ class DeletingRowsService {
         StringBuilder stringBuilder = new StringBuilder().append(DBQueries.DELETE_BY_ID_QUERY);
         Arrays.stream(selectedRowsId).forEach(elem -> stringBuilder.append(elem).append(","));
         stringBuilder.deleteCharAt(stringBuilder.length()-1).append(")");
-        controller.getDbConnector().executeQuery(stringBuilder.toString());
+        controller.executeDeleteQuery(stringBuilder.toString());
         controller.getDataFromDatabase();
     }
 }

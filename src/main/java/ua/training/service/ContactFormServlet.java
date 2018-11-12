@@ -114,7 +114,7 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     private void sortValuesInTable(String query) {
-        controller.setFullContactDataList(controller.executeSortingDBQuery(query));
+        controller.setFullContactDataList(controller.executeSelectDBQuery(query));
     }
 
     private void uniteRows(HttpServletRequest request) {

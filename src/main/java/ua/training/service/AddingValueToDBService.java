@@ -1,6 +1,7 @@
 package ua.training.service;
 
 import ua.training.model.*;
+import ua.training.util.DBQueries;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,7 +38,40 @@ class AddingValueToDBService {
             }
 
             if (!CheckingRegExService.checkRegexFullContactData(fullContactData, controller)) {
-                controller.addContactToList(fullContactData);
+                StringBuilder query = new StringBuilder().append(DBQueries.HEADER_INSERT_TO_DB);
+                StringBuilder queryValues = new StringBuilder().append("(");
+
+                if (fullContactData.getName() != null) {
+                    query.append("name,");
+                    queryValues.append("'").append(fullContactData.getName()).append("',");
+                }
+                if (fullContactData.getLastName() != null) {
+                    query.append("lastname,");
+                    queryValues.append("'").append(fullContactData.getLastName()).append("',");
+                }
+                if (fullContactData.getNickname() != null) {
+                    query.append("nickname,");
+                    queryValues.append("'").append(fullContactData.getNickname()).append("',");
+                }
+                if (fullContactData.getPhone() != null) {
+                    query.append("phone,");
+                    queryValues.append("'").append(fullContactData.getPhone()).append("',");
+                }
+                if (fullContactData.getId() != null) {
+                    query.append("id,");
+                    queryValues.append("'").append(fullContactData.getId()).append("',");
+                }
+                if (queryValues.lastIndexOf(",") == queryValues.length() - 1) {
+                    queryValues.deleteCharAt(queryValues.length() - 1);
+                }
+                if (query.lastIndexOf(",") == query.length() - 1) {
+                    query.deleteCharAt(query.length() - 1);
+                }
+                query.append(")");
+                queryValues.append(")");
+                query.append(" VALUES ").append(queryValues);
+
+                controller.addContactToList(query.toString());
             } else {
                 CheckingRegExService.getWarnedRegexStrings(fullContactData, controller);
             }

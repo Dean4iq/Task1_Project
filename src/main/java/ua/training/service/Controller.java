@@ -2,7 +2,6 @@ package ua.training.service;
 
 import ua.training.model.FullContactData;
 import ua.training.util.DBConnector;
-import ua.training.util.DBQueries;
 import ua.training.util.LocalizationLinks;
 import ua.training.util.RegExLinks;
 
@@ -29,10 +28,6 @@ class Controller {
         fullContactDataList = getDataFromDatabase();
     }
 
-    DBConnector getDbConnector() {
-        return dbConnector;
-    }
-
     static String getStringFromBundle(ResourceBundle resourceBundle,
                                       String message) {
         return new String(StandardCharsets.ISO_8859_1.encode(resourceBundle.getString(message)).array());
@@ -55,15 +50,19 @@ class Controller {
                         new Locale(locale));
     }
 
-    List<FullContactData> executeSortingDBQuery(String query) {
+    List<FullContactData> executeSelectDBQuery(String query) {
         dbConnector.checkDataBaseTable();
         fullContactDataList = dbConnector.getQueriedDataFromTable(query);
         return fullContactDataList;
     }
 
-    List<FullContactData> executeAnyDBQuery(String query) {
+    void executeDeleteQuery(String query){
+        dbConnector.executeDeleteQuery(query);
+    }
+
+    void executeUpdateDBQuery(String query) {
         dbConnector.checkDataBaseTable();
-        return dbConnector.getQueriedDataFromTable(query);
+        dbConnector.executeUpdateQuery(query);
     }
 
     List<FullContactData> getDataFromDatabase() {
@@ -72,38 +71,8 @@ class Controller {
         return fullContactDataList;
     }
 
-    void addContactToList(FullContactData fullContactData) {
-        StringBuilder query = new StringBuilder().append(DBQueries.HEADER_INSERT_TO_DB);
-        StringBuilder queryValues = new StringBuilder().append("(");
-        if (fullContactData.getName() != null) {
-            query.append("name,");
-            queryValues.append("'").append(fullContactData.getName()).append("',");
-        }
-        if (fullContactData.getLastName() != null) {
-            query.append("lastname,");
-            queryValues.append("'").append(fullContactData.getLastName()).append("',");
-        }
-        if (fullContactData.getNickname() != null) {
-            query.append("nickname,");
-            queryValues.append("'").append(fullContactData.getNickname()).append("',");
-        }
-        if (fullContactData.getPhone() != null) {
-            query.append("phone,");
-            queryValues.append("'").append(fullContactData.getPhone()).append("',");
-        }
-        if (fullContactData.getId() != null) {
-            query.append("id,");
-            queryValues.append("'").append(fullContactData.getId()).append("',");
-        }
-        if (queryValues.lastIndexOf(",") == queryValues.length() - 1) {
-            queryValues.deleteCharAt(queryValues.length() - 1);
-        }
-        if (query.lastIndexOf(",") == query.length() - 1) {
-            query.deleteCharAt(query.length() - 1);
-        }
-        query.append(")");
-        queryValues.append(")");
-        dbConnector.executeQuery(query.append(" VALUES ").append(queryValues).toString());
+    void addContactToList(String query) {
+        dbConnector.executeUpdateQuery(query);
 
         fullContactDataList = getDataFromDatabase();
     }
