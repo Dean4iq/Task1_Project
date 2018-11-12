@@ -77,7 +77,8 @@ public class ContactFormServlet extends HttpServlet {
         request.setAttribute("buttonAdd", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_ADD.getLocaleSource())).array()));
 
-        request.setAttribute("regexStrings", CheckingRegExService.getRegexStrings(controller));
+        request.setAttribute("regexStrings",
+                CheckingRegExService.getRegexStrings(controller));
 
         request.getRequestDispatcher("/view/index.jsp").forward(request, response);
     }
