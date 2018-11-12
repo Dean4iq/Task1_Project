@@ -1,5 +1,6 @@
 package ua.training.util;
 
+import com.mysql.jdbc.ResultSetImpl;
 import ua.training.model.*;
 
 import java.sql.*;
@@ -43,7 +44,7 @@ public final class DBConnector {
                         new NicknameContact(resultSet.getString("nickname")),
                         new PhoneContact(resultSet.getString("phone")),
                         new IdContact(resultSet.getString("id"))));
-                result.get(result.size()-1).setRowId(resultSet.getInt("db_id"));
+                result.get(result.size() - 1).setRowId(resultSet.getInt("db_id"));
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -54,7 +55,7 @@ public final class DBConnector {
         return result;
     }
 
-    public List<FullContactData> getSortedDataFromTable(String query) {
+    public List<FullContactData> getQueriedDataFromTable(String query) {
         List<FullContactData> result = new ArrayList<>();
 
         try (Statement statement = dbConnection.createStatement()) {
@@ -66,7 +67,7 @@ public final class DBConnector {
                         new NicknameContact(resultSet.getString("nickname")),
                         new PhoneContact(resultSet.getString("phone")),
                         new IdContact(resultSet.getString("id"))));
-                result.get(result.size()-1).setRowId(resultSet.getInt("db_id"));
+                result.get(result.size() - 1).setRowId(resultSet.getInt("db_id"));
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -77,7 +78,7 @@ public final class DBConnector {
         return result;
     }
 
-    public void executeQuery(String query){
+    public void executeQuery(String query) {
         try (Statement statement = dbConnection.createStatement()) {
             statement.execute(query);
         } catch (SQLException ex) {

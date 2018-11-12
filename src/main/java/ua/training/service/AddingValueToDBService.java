@@ -8,7 +8,8 @@ class AddingValueToDBService {
     private AddingValueToDBService() {
     }
 
-    static void addValueToList(HttpServletRequest request, Controller controller) {
+    static void addRequestValueToDB(HttpServletRequest request,
+                                    Controller controller) {
         final String name = request.getParameter("name");
         final String lastName = request.getParameter("lastname");
         final String nickname = request.getParameter("nickname");

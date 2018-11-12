@@ -21,4 +21,5 @@ public interface DBQueries {
     String HEADER_INSERT_TO_DB = "INSERT INTO fullcontactdata (";
     String DELETE_BY_ID_QUERY = "DELETE FROM fullcontactdata WHERE db_id IN (";
     String HEADER_SELECT_FROM_WHERE_ID = "SELECT * FROM fullcontactdata WHERE id IN (";
+    String HEADER_UPDATE_ALL_COLUMNS = "UPDATE fullcontactdata SET ";
 }

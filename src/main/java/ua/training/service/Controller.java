@@ -27,7 +27,6 @@ class Controller {
 
         dbConnector = new DBConnector();
         fullContactDataList = getDataFromDatabase();
-
     }
 
     DBConnector getDbConnector() {
@@ -58,8 +57,13 @@ class Controller {
 
     List<FullContactData> executeSortingDBQuery(String query) {
         dbConnector.checkDataBaseTable();
-        fullContactDataList = dbConnector.getSortedDataFromTable(query);
+        fullContactDataList = dbConnector.getQueriedDataFromTable(query);
         return fullContactDataList;
+    }
+
+    List<FullContactData> executeAnyDBQuery(String query) {
+        dbConnector.checkDataBaseTable();
+        return dbConnector.getQueriedDataFromTable(query);
     }
 
     List<FullContactData> getDataFromDatabase() {

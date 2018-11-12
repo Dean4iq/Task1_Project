@@ -130,7 +130,7 @@ public class ContactFormServlet extends HttpServlet {
     }
 
     private void addValueToList(HttpServletRequest req) {
-        AddingValueToDBService.addValueToList(req, controller);
+        AddingValueToDBService.addRequestValueToDB(req, controller);
     }
 }
 
