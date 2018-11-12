@@ -49,36 +49,35 @@ public class ContactFormServlet extends HttpServlet {
         request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
         request.setAttribute("contacts", controller.getFullContactDataList());
         request.setAttribute("tableDescription",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource()));
         request.setAttribute("nameColumn",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.NAME_COLUMN.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.NAME_COLUMN.getLocaleSource()));
         request.setAttribute("lastNameColumn",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.LASTNAME_COLUMN.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.LASTNAME_COLUMN.getLocaleSource()));
         request.setAttribute("nicknameColumn",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.NICKNAME_COLUMN.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.NICKNAME_COLUMN.getLocaleSource()));
         request.setAttribute("phoneColumn",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.PHONE_COLUMN.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.PHONE_COLUMN.getLocaleSource()));
         request.setAttribute("idColumn",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.ID_COLUMN.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.ID_COLUMN.getLocaleSource()));
         request.setAttribute("inputDeclaration",
-                new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.INPUT_DECLARATION.getLocaleSource())).array()));
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.INPUT_DECLARATION.getLocaleSource()));
 
-        request.setAttribute("buttonUnite", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_UNITE.getLocaleSource())).array()));
-        request.setAttribute("buttonDelete", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_DELETE.getLocaleSource())).array()));
-        request.setAttribute("buttonAdd", new String(StandardCharsets.ISO_8859_1.encode(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_ADD.getLocaleSource())).array()));
+        request.setAttribute("buttonUnite", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_UNITE.getLocaleSource()));
+        request.setAttribute("buttonDelete", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_DELETE.getLocaleSource()));
+        request.setAttribute("buttonAdd", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                LocalizationLinks.BUTTON_ADD.getLocaleSource()));
 
-        request.setAttribute("FAQContent",
-                new String(StandardCharsets.ISO_8859_1.encode(buildFAQContent()).array()));
+        request.setAttribute("FAQContent", buildFAQContent());
         request.setAttribute("regexStrings",
                 CheckingRegExService.getRegexStrings(controller));
 

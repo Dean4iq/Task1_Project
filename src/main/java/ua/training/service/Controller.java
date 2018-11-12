@@ -6,6 +6,7 @@ import ua.training.util.DBQueries;
 import ua.training.util.LocalizationLinks;
 import ua.training.util.RegExLinks;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -35,7 +36,7 @@ class Controller {
 
     static String getStringFromBundle(ResourceBundle resourceBundle,
                                       String message) {
-        return resourceBundle.getString(message);
+        return new String(StandardCharsets.ISO_8859_1.encode(resourceBundle.getString(message)).array());
     }
 
     ResourceBundle getRegexResourceBundle() {
