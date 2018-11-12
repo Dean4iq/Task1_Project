@@ -1,5 +1,7 @@
 package ua.training.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.training.util.DBQueries;
 import ua.training.util.LocalizationLinks;
 
@@ -8,12 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ContactFormServlet extends HttpServlet {
     private final Controller controller = new Controller();
     private final Map<String, Handler> commandMap = new HashMap<>();
+
+    private final Logger log = LogManager.getLogger(ContactFormServlet.class);
 
     @Override
     public void init() throws ServletException {
@@ -42,8 +47,12 @@ public class ContactFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+        } catch (Exception ex) {
+            log.error(ex.getStackTrace());
+        }
 
         request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
         request.setAttribute("contacts", controller.getDataFromDatabase());
@@ -69,18 +78,25 @@ public class ContactFormServlet extends HttpServlet {
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.INPUT_DECLARATION.getLocaleSource()));
 
-        request.setAttribute("buttonUnite", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonUnite",
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_UNITE.getLocaleSource()));
-        request.setAttribute("buttonDelete", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonDelete",
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_DELETE.getLocaleSource()));
-        request.setAttribute("buttonAdd", Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+        request.setAttribute("buttonAdd",
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                 LocalizationLinks.BUTTON_ADD.getLocaleSource()));
 
         request.setAttribute("FAQContent", buildFAQContent());
         request.setAttribute("regexStrings",
                 CheckingRegExService.getRegexStrings(controller));
 
-        request.getRequestDispatcher("/view/index.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/view/index.jsp").forward(request, response);
+        } catch (Exception ex) {
+            log.error(ex.getMessage() + "\n" + Arrays.toString(ex.getStackTrace()));
+        }
     }
 
     @Override

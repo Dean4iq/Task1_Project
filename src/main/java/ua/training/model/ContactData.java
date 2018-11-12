@@ -1,27 +1,27 @@
 package ua.training.model;
 
 public abstract class ContactData implements Comparable<ContactData> {
-    String contactData;
+    private String contactDataField;
 
-    ContactData(String contactData) {
-        this.contactData = contactData;
+    ContactData(String contactDataField) {
+        this.contactDataField = contactDataField;
     }
 
     public void setData(String contactData) {
-        this.contactData = contactData;
+        this.contactDataField = contactData;
     }
 
-    public String getContactData() {
-        return contactData;
+    public String getContactDataField() {
+        return contactDataField;
     }
 
     @Override
     public int compareTo(ContactData o) {
-        return this.getContactData().compareTo(o.getContactData());
+        return this.getContactDataField().compareTo(o.getContactDataField());
     }
 
     @Override
     public String toString() {
-        return contactData;
+        return contactDataField;
     }
 }

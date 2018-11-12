@@ -1,24 +1,28 @@
 package ua.training.util;
 
-import com.mysql.jdbc.ResultSetImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.training.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class DBConnector {
     private static final String DB_CONNECTION_URL = "jdbc:mysql://localhost/task1?user=user&password=pass";
 
     private static Connection dbConnection;
+    private final Logger log = LogManager.getLogger(DBConnector.class);
 
     public DBConnector() {
         try {
             dbConnection = DriverManager.getConnection(DB_CONNECTION_URL);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error("VendorError: " + ex.getErrorCode());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
     }
 
@@ -26,9 +30,10 @@ public final class DBConnector {
         try (Statement statement = dbConnection.createStatement()) {
             statement.execute(DBQueries.CREATE_TABLE);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error("VendorError: " + ex.getErrorCode());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
     }
 
@@ -39,9 +44,10 @@ public final class DBConnector {
             ResultSet resultSet = statement.executeQuery(DBQueries.GET_DATA_FROM_TABLE);
             result = processResultSet(resultSet);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error("VendorError: " + ex.getErrorCode());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
 
         return result;
@@ -54,9 +60,10 @@ public final class DBConnector {
             ResultSet resultSet = statement.executeQuery(query);
             result = processResultSet(resultSet);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error("VendorError: " + ex.getErrorCode());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
 
         return result;
@@ -109,9 +116,10 @@ public final class DBConnector {
         try (Statement statement = dbConnection.createStatement()) {
             statement.execute(query);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error("VendorError: " + ex.getErrorCode());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
     }
 
@@ -119,9 +127,9 @@ public final class DBConnector {
         try (Statement statement = dbConnection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            log.error("SQLException: " + ex.getMessage());
+            log.error("SQLState: " + ex.getSQLState());
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
     }
 }

@@ -10,8 +10,8 @@
     <body>
         <form method="post">
             <select name="language">
-                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
                 <option value="de" ${langVariable=="de"?"selected":""}>Deutsch</option>
+                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
                 <option value="ru" ${langVariable=="ru"?"selected":""}>Русский</option>
                 <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
             </select>

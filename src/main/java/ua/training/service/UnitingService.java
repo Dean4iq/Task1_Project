@@ -1,16 +1,18 @@
 package ua.training.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.training.model.*;
 import ua.training.util.DBQueries;
 
-import javax.enterprise.deploy.spi.exceptions.TargetException;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 class UnitingService {
+    private static final Logger log = LogManager.getLogger(UnitingService.class);
+
     private UnitingService() {
     }
 
@@ -44,27 +46,27 @@ class UnitingService {
 
         if (fullContactData.getName() != null) {
             stringBuilder.append("name = ").append("'")
-                    .append(fullContactData.getName().getContactData())
+                    .append(fullContactData.getName().getContactDataField())
                     .append("'").append(",");
         }
         if (fullContactData.getLastName() != null) {
             stringBuilder.append("lastname = ").append("'")
-                    .append(fullContactData.getLastName().getContactData())
+                    .append(fullContactData.getLastName().getContactDataField())
                     .append("'").append(",");
         }
         if (fullContactData.getNickname() != null) {
             stringBuilder.append("nickname = ").append("'")
-                    .append(fullContactData.getNickname().getContactData())
+                    .append(fullContactData.getNickname().getContactDataField())
                     .append("'").append(",");
         }
         if (fullContactData.getPhone() != null) {
             stringBuilder.append("phone = ").append("'")
-                    .append(fullContactData.getPhone().getContactData())
+                    .append(fullContactData.getPhone().getContactDataField())
                     .append("'").append(",");
         }
         if (fullContactData.getId() != null) {
             stringBuilder.append("id = ").append("'")
-                    .append(fullContactData.getId().getContactData())
+                    .append(fullContactData.getId().getContactDataField())
                     .append("'").append(",");
         }
 
@@ -98,7 +100,7 @@ class UnitingService {
                     fullContactDataSecond,
                     "getId", "setId");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
     }
 

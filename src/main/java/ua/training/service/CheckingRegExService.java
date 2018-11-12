@@ -55,23 +55,23 @@ class CheckingRegExService {
 
         if (fullContactData.getName() != null) {
             contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
-                    fullContactData.getName().getContactData());
+                    fullContactData.getName().getContactDataField());
         }
         if (fullContactData.getLastName() != null) {
             contactDatalist.put(RegExLinks.LAST_NAME_REGEX.getRegExSource(),
-                    fullContactData.getLastName().getContactData());
+                    fullContactData.getLastName().getContactDataField());
         }
         if (fullContactData.getNickname() != null) {
             contactDatalist.put(RegExLinks.NICKNAME_REGEX.getRegExSource(),
-                    fullContactData.getNickname().getContactData());
+                    fullContactData.getNickname().getContactDataField());
         }
         if (fullContactData.getPhone() != null) {
             contactDatalist.put(RegExLinks.PHONE_REGEX.getRegExSource(),
-                    fullContactData.getPhone().getContactData());
+                    fullContactData.getPhone().getContactDataField());
         }
         if (fullContactData.getId() != null) {
             contactDatalist.put(RegExLinks.ID_REGEX.getRegExSource(),
-                    fullContactData.getId().getContactData());
+                    fullContactData.getId().getContactDataField());
         }
 
         return contactDatalist.entrySet().stream()
@@ -81,10 +81,10 @@ class CheckingRegExService {
                                         elem.getKey()))));
     }
 
-    static boolean checkRegexContactDataString(ContactData contactData,
+    private static boolean checkRegexContactDataString(ContactData contactData,
                                                String regEx,
                                                Controller controller) {
-        return contactData.getContactData().matches(Controller
+        return contactData.getContactDataField().matches(Controller
                 .getStringFromBundle(controller.getRegexResourceBundle(), regEx));
     }
 
