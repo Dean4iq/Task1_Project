@@ -79,6 +79,8 @@ public class ContactFormServlet extends HttpServlet {
 
         request.setAttribute("FAQContent",
                 new String(StandardCharsets.ISO_8859_1.encode(buildFAQContent()).array()));
+        request.setAttribute("regexStrings",
+                CheckingRegExService.getRegexStrings(controller));
 
         request.getRequestDispatcher("/view/index.jsp").forward(request, response);
     }
@@ -94,23 +96,6 @@ public class ContactFormServlet extends HttpServlet {
                 .findFirst().get().getValue().handle(request);
 
         doGet(request, response);
-    }
-
-    private String buildFAQContent(){
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<p>")
-                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.FAQ_SORT_INFO.getLocaleSource())).append("</p>")
-                .append("<p>")
-                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.FAQ_INPUT_INFO.getLocaleSource())).append("</p>")
-                .append("<p>")
-                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.FAQ_DELETE_INFO.getLocaleSource())).append("</p>")
-                .append("<p>")
-                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.FAQ_UNITE_INFO.getLocaleSource())).append("</p>");
-        return stringBuilder.toString();
     }
 
     private void sortValuesInTable(String query) {
