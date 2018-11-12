@@ -54,7 +54,6 @@ class CheckingRegExService {
         Map<String, String> contactDatalist = new HashMap<>();
 
         if (fullContactData.getName() != null) {
-            System.out.println("skdfhksdi");
             contactDatalist.put(RegExLinks.NAME_REGEX.getRegExSource(),
                     fullContactData.getName().getContactData());
         }
@@ -75,12 +74,6 @@ class CheckingRegExService {
                     fullContactData.getId().getContactData());
         }
 
-
-        System.out.println(contactDatalist.entrySet().stream()
-                .anyMatch(elem ->
-                        !(elem.getValue().matches(Controller
-                                .getStringFromBundle(controller.getRegexResourceBundle(),
-                                        elem.getKey())))));
         return contactDatalist.entrySet().stream()
                 .anyMatch(elem ->
                         !(elem.getValue().matches(Controller

@@ -37,7 +37,6 @@ class AddingValueToDBService {
             }
 
             if (!CheckingRegExService.checkRegexFullContactData(fullContactData, controller)) {
-                System.out.println(fullContactData.getName().getContactData());
                 controller.addContactToList(fullContactData);
             } else {
                 CheckingRegExService.getWarnedRegexStrings(fullContactData, controller);
