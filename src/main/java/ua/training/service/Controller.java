@@ -52,12 +52,13 @@ class Controller {
 
     List<FullContactData> executeSelectDBQuery(String query) {
         dbConnector.checkDataBaseTable();
-        fullContactDataList = dbConnector.getQueriedDataFromTable(query);
+        setFullContactDataList(dbConnector.getQueriedDataFromTable(query));
         return fullContactDataList;
     }
 
     void executeDeleteQuery(String query){
         dbConnector.executeDeleteQuery(query);
+        setFullContactDataList(getDataFromDatabase());
     }
 
     void executeUpdateDBQuery(String query) {
@@ -67,14 +68,13 @@ class Controller {
 
     List<FullContactData> getDataFromDatabase() {
         dbConnector.checkDataBaseTable();
-        fullContactDataList = dbConnector.getDataFromTable();
-        return fullContactDataList;
+        return dbConnector.getDataFromTable();
     }
 
     void addContactToList(String query) {
         dbConnector.executeUpdateQuery(query);
 
-        fullContactDataList = getDataFromDatabase();
+        setFullContactDataList(getDataFromDatabase());
     }
 
     List<FullContactData> getFullContactDataList() {

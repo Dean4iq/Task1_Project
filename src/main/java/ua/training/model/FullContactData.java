@@ -1,5 +1,8 @@
 package ua.training.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FullContactData {
     private int rowId;
     private NameContact name;
@@ -8,7 +11,8 @@ public class FullContactData {
     private PhoneContact phone;
     private IdContact id;
 
-    public FullContactData(){}
+    public FullContactData() {
+    }
 
     public FullContactData(NameContact name, LastNameContact lastName,
                            NicknameContact nickname, PhoneContact phone,
@@ -18,6 +22,27 @@ public class FullContactData {
         this.nickname = nickname;
         this.phone = phone;
         this.id = id;
+    }
+
+    public List<String> getRows() {
+        List<String> resulted = new ArrayList<>();
+        if (name != null) {
+            resulted.add(name.getContactDataField());
+        }
+        if (lastName != null) {
+            resulted.add(lastName.getContactDataField());
+        }
+        if (nickname != null) {
+            resulted.add(nickname.getContactDataField());
+        }
+        if (phone != null) {
+            resulted.add(phone.getContactDataField());
+        }
+        if (id != null) {
+            resulted.add(id.getContactDataField());
+        }
+
+        return resulted;
     }
 
     public int getRowId() {

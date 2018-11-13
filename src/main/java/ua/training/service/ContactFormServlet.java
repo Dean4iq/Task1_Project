@@ -22,7 +22,7 @@ public class ContactFormServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        commandMap.put("addValue", object -> addValueToList((HttpServletRequest)object));
+        commandMap.put("addValue", object -> addValueToList((HttpServletRequest) object));
         commandMap.put("sortNameAsc",
                 object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_NAME_FROM_TABLE_ASC));
         commandMap.put("sortNameDesc",
@@ -32,16 +32,18 @@ public class ContactFormServlet extends HttpServlet {
         commandMap.put("sortLastNameDesc",
                 object -> sortValuesInTable(DBQueries.GET_SORTED_DATA_BY_LASTNAME_FROM_TABLE_DESC));
         commandMap.put("uniteRows",
-                object -> uniteRows((HttpServletRequest)object));
+                object -> uniteRows((HttpServletRequest) object));
         commandMap.put("deleteRows",
-                object -> deleteRows((HttpServletRequest)object));
+                object -> deleteRows((HttpServletRequest) object));
         commandMap.put("setLanguage", object -> {
-            ((HttpServletRequest)object)
+            ((HttpServletRequest) object)
                     .setAttribute("langVariable",
-                            ((HttpServletRequest)object).getParameter("language"));
-            changeLocalizationSettings(((HttpServletRequest)object)
+                            ((HttpServletRequest) object).getParameter("language"));
+            changeLocalizationSettings(((HttpServletRequest) object)
                     .getParameter("language"));
+
         });
+        commandMap.put("searchInTable", object -> searchInTable((HttpServletRequest) object));
     }
 
     @Override
@@ -54,8 +56,8 @@ public class ContactFormServlet extends HttpServlet {
             log.error(ex.getStackTrace());
         }
 
-        request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
-        request.setAttribute("contacts", controller.getDataFromDatabase());
+        //table values
+        request.setAttribute("contacts", controller.getFullContactDataList());
         request.setAttribute("tableDescription",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.TABLE_DESCRIPTION.getLocaleSource()));
@@ -74,20 +76,31 @@ public class ContactFormServlet extends HttpServlet {
         request.setAttribute("idColumn",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.ID_COLUMN.getLocaleSource()));
+
+        //headers values
         request.setAttribute("inputDeclaration",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
                         LocalizationLinks.INPUT_DECLARATION.getLocaleSource()));
+        request.setAttribute("searchDeclaration",
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.SEARCH_DECLARATION.getLocaleSource()));
 
+        //buttons values
         request.setAttribute("buttonUnite",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_UNITE.getLocaleSource()));
+                        LocalizationLinks.BUTTON_UNITE.getLocaleSource()));
         request.setAttribute("buttonDelete",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_DELETE.getLocaleSource()));
+                        LocalizationLinks.BUTTON_DELETE.getLocaleSource()));
         request.setAttribute("buttonAdd",
                 Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                LocalizationLinks.BUTTON_ADD.getLocaleSource()));
+                        LocalizationLinks.BUTTON_ADD.getLocaleSource()));
+        request.setAttribute("buttonSearch",
+                Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.BUTTON_SEARCH.getLocaleSource()));
 
+        //other values
+        request.setAttribute("langVariable", controller.getMessageResourceBundle().getLocale().toLanguageTag());
         request.setAttribute("FAQContent", buildFAQContent());
         request.setAttribute("regexStrings",
                 CheckingRegExService.getRegexStrings(controller));
@@ -109,10 +122,14 @@ public class ContactFormServlet extends HttpServlet {
                 .filter(elem -> request.getParameter(elem.getKey()) != null)
                 .findFirst().get().getValue().handle(request);
 
-        doGet(request, response);
+        try {
+            doGet(request, response);
+        } catch (Exception ex) {
+            log.error(Arrays.toString(ex.getStackTrace()));
+        }
     }
 
-    private String buildFAQContent(){
+    private String buildFAQContent() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<p>")
                 .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
@@ -131,6 +148,11 @@ public class ContactFormServlet extends HttpServlet {
 
     private void sortValuesInTable(String query) {
         controller.setFullContactDataList(controller.executeSelectDBQuery(query));
+    }
+
+    private void searchInTable(HttpServletRequest request) {
+        SearchingService
+                .searchInTable(request.getParameter("searchingRequest"), controller);
     }
 
     private void uniteRows(HttpServletRequest request) {

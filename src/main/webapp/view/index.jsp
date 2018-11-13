@@ -79,6 +79,13 @@
                      <input type="submit" name="uniteRows" value="${buttonUnite}"/>
                      <input type="submit" name="deleteRows" value="${buttonDelete}"/>
                  </form>
+                 <p style="border-bottom:1px solid;"></p>
+
+                 <h2>${searchDeclaration}</h2><br />
+                 <form method="post">
+                    <input type="text" name="searchingRequest"/>
+                    <input type="submit" value="${buttonSearch}" name="searchInTable"/>
+                 </form>
 
                  <p style="border-bottom:1px solid;"></p>
                  <h2>${inputDeclaration}</h2><br />
@@ -87,31 +94,31 @@
             <table border="0">
                 <tr>
                     <td>${nameColumn}</td>
-                    <td><input type="text" name="name"></td>
+                    <td><input type="text" name="name"/></td>
                     <td>${regexStrings.regexName}</td>
                 </tr>
                 <tr>
                     <td>${lastNameColumn}</td>
-                    <td><input type="text" name="lastname"></td>
+                    <td><input type="text" name="lastname"/></td>
                     <td>${regexStrings.regexLastName}</td>
                 </tr>
                 <tr>
                     <td>${nicknameColumn}</td>
-                    <td><input type="text" name="nickname"></td>
+                    <td><input type="text" name="nickname"/></td>
                     <td>${regexStrings.regexNickname}</td>
                 </tr>
                 <tr>
                     <td>${phoneColumn}</td>
-                    <td><input type="text" name="phone"></td>
+                    <td><input type="text" name="phone"/></td>
                     <td>${regexStrings.regexPhone}</td>
                 </tr>
                 <tr>
                     <td>${idColumn}</td>
-                    <td><input type="text" name="id"></td>
+                    <td><input type="text" name="id"/></td>
                     <td>${regexStrings.regexId}</td>
                 </tr>
             </table>
-             <input type="submit" value="${buttonAdd}" name="addValue"><br>
+             <input type="submit" value="${buttonAdd}" name="addValue"/><br>
         </form>
         </div>
 
