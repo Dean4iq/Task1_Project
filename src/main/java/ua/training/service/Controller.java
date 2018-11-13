@@ -64,6 +64,7 @@ class Controller {
     void executeUpdateDBQuery(String query) {
         dbConnector.checkDataBaseTable();
         dbConnector.executeUpdateQuery(query);
+        setFullContactDataList(getDataFromDatabase());
     }
 
     List<FullContactData> getDataFromDatabase() {
