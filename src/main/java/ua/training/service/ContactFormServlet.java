@@ -142,7 +142,10 @@ public class ContactFormServlet extends HttpServlet {
                         LocalizationLinks.FAQ_DELETE_INFO.getLocaleSource())).append("</p>")
                 .append("<p>")
                 .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
-                        LocalizationLinks.FAQ_UNITE_INFO.getLocaleSource())).append("</p>");
+                        LocalizationLinks.FAQ_UNITE_INFO.getLocaleSource())).append("</p>")
+                .append("<p>")
+                .append(Controller.getStringFromBundle(controller.getMessageResourceBundle(),
+                        LocalizationLinks.FAQ_SEARCH_INFO.getLocaleSource())).append("</p>");
         return stringBuilder.toString();
     }
 

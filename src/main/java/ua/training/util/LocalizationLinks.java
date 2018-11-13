@@ -17,7 +17,8 @@ public enum LocalizationLinks {
     FAQ_SORT_INFO("faq.info.sort"),
     FAQ_INPUT_INFO("faq.info.input"),
     FAQ_DELETE_INFO("faq.info.delete"),
-    FAQ_UNITE_INFO("faq.info.unite");
+    FAQ_UNITE_INFO("faq.info.unite"),
+    FAQ_SEARCH_INFO("faq.info.search");
 
     String localeSource;
 
