@@ -6,14 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 class DeletingRowsService {
-    private DeletingRowsService(){}
+    private DeletingRowsService() {
+    }
 
-    static void deleteRows(HttpServletRequest request, Controller controller){
-        String[] selectedRowsId = request.getParameterValues("selectedRows");
+    static void deleteRows(HttpServletRequest request, Controller controller) {
 
         StringBuilder stringBuilder = new StringBuilder().append(DBQueries.DELETE_BY_ID_QUERY);
-        Arrays.stream(selectedRowsId).forEach(elem -> stringBuilder.append(elem).append(","));
-        stringBuilder.deleteCharAt(stringBuilder.length()-1).append(")");
+        Arrays.stream(request.getParameterValues("selectedRows"))
+                .forEach(elem -> stringBuilder.append(elem).append(","));
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(")");
         controller.executeDeleteQuery(stringBuilder.toString());
     }
 }
