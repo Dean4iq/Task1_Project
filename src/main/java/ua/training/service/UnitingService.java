@@ -17,20 +17,15 @@ class UnitingService {
     private static Map<String, GetterHandler> checkNullsHandler;
     private static String SQL_HEADER = "='";
     private static String SQL_ENDING = "',";
-    private static FullContactData fullContactData;
 
     static {
         checkNullsHandler = new HashMap<>();
 
-        checkNullsHandler.put("name", () -> fullContactData.getName());
-        checkNullsHandler.put("lastname", () -> fullContactData.getLastName());
-        checkNullsHandler.put("nickname", () -> fullContactData.getNickname());
-        checkNullsHandler.put("phone", () -> fullContactData.getPhone());
-        checkNullsHandler.put("id", () -> fullContactData.getId());
-    }
-
-    private static void setFullContactData(FullContactData fullContactData) {
-        UnitingService.fullContactData = fullContactData;
+        checkNullsHandler.put("name", FullContactData::getName);
+        checkNullsHandler.put("lastname", FullContactData::getLastName);
+        checkNullsHandler.put("nickname", FullContactData::getNickname);
+        checkNullsHandler.put("phone", FullContactData::getPhone);
+        checkNullsHandler.put("id", FullContactData::getId);
     }
 
     private UnitingService() {
@@ -64,14 +59,15 @@ class UnitingService {
         StringBuilder stringBuilder = new StringBuilder()
                 .append(DBQueries.HEADER_UPDATE_ALL_COLUMNS);
 
-        setFullContactData(fullContactData);
-
         checkNullsHandler.entrySet().stream()
-                .filter(elem -> elem.getValue().handleGet() != null)
+                .filter(elem -> elem.getValue()
+                        .handleGet(fullContactData) != null)
                 .forEach(elem -> stringBuilder
                         .append(elem.getKey())
                         .append(SQL_HEADER)
-                        .append(((ContactData) elem.getValue().handleGet()).getContactDataField())
+                        .append(((ContactData) elem.getValue()
+                                .handleGet(fullContactData))
+                                .getContactDataField())
                         .append(SQL_ENDING));
 
         stringBuilder.deleteCharAt(stringBuilder.length() - 1)
@@ -137,6 +133,6 @@ class UnitingService {
     }
 
     interface GetterHandler {
-        Object handleGet();
+        Object handleGet(FullContactData fullContactData);
     }
 }

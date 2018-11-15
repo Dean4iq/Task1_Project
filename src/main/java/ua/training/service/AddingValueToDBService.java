@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 class AddingValueToDBService {
-    private static Map<String, Handler> handlerMap = new HashMap<>();
+    private static Map<String, InitialHandler> initialHandlerMap = new HashMap<>();
+    private static Map<String, ConditionalHandler> conditionalHandlerMap = new HashMap<>();
 
     private AddingValueToDBService() {
     }
@@ -21,38 +22,36 @@ class AddingValueToDBService {
         final String phone = request.getParameter("phone");
         final String id = request.getParameter("id");
 
+        initialHandlerMap.put(name, (fullContactData, data) ->
+                fullContactData.setName(new NameContact(data)));
+        initialHandlerMap.put(lastName, (fullContactData, data) ->
+                fullContactData.setLastName(new LastNameContact(data)));
+        initialHandlerMap.put(nickname, (fullContactData, data) ->
+                fullContactData.setNickname(new NicknameContact(data)));
+        initialHandlerMap.put(phone, (fullContactData, data) ->
+                fullContactData.setPhone(new PhoneContact(data)));
+        initialHandlerMap.put(id, (fullContactData, data) ->
+                fullContactData.setId(new IdContact(data)));
 
-        if (!name.equals("") || !lastName.equals("") || !nickname.equals("")
-                || !phone.equals("") || !id.equals("")) {
+        if (initialHandlerMap.entrySet().stream()
+                .anyMatch(elem -> !elem.getKey().equals(""))) {
             final FullContactData fullContactData = new FullContactData();
 
-            if (!name.equals("")) {
-                fullContactData.setName(new NameContact(name));
-            }
-            if (!lastName.equals("")) {
-                fullContactData.setLastName(new LastNameContact(lastName));
-            }
-            if (!nickname.equals("")) {
-                fullContactData.setNickname(new NicknameContact(nickname));
-            }
-            if (!phone.equals("")) {
-                fullContactData.setPhone(new PhoneContact(phone));
-            }
-            if (!id.equals("")) {
-                fullContactData.setId(new IdContact(id));
-            }
+            initialHandlerMap.entrySet().stream()
+                    .filter(elem -> !elem.getKey().equals(""))
+                    .forEach(elem -> elem.getValue().handle(fullContactData, elem.getKey()));
 
             if (!CheckingRegExService.checkRegexFullContactData(fullContactData, controller)) {
                 StringBuilder query = new StringBuilder().append(DBQueries.HEADER_INSERT_TO_DB);
                 StringBuilder queryValues = new StringBuilder().append("(");
 
-                handlerMap.put("name", fullContactData::getName);
-                handlerMap.put("lastname", fullContactData::getLastName);
-                handlerMap.put("nickname", fullContactData::getNickname);
-                handlerMap.put("phone", fullContactData::getPhone);
-                handlerMap.put("id", fullContactData::getId);
+                conditionalHandlerMap.put("name", fullContactData::getName);
+                conditionalHandlerMap.put("lastname", fullContactData::getLastName);
+                conditionalHandlerMap.put("nickname", fullContactData::getNickname);
+                conditionalHandlerMap.put("phone", fullContactData::getPhone);
+                conditionalHandlerMap.put("id", fullContactData::getId);
 
-                handlerMap.entrySet().stream()
+                conditionalHandlerMap.entrySet().stream()
                         .filter(elem -> elem.getValue().getterHandler() != null)
                         .forEach(elem -> {
                             query.append(elem.getKey()).append(",");
@@ -67,7 +66,6 @@ class AddingValueToDBService {
                 queryValues.append(")");
                 query.append(" VALUES ").append(queryValues);
 
-                System.out.println(query.toString());
                 controller.addContactToList(query.toString());
             } else {
                 CheckingRegExService.getWarnedRegexStrings(fullContactData, controller);
@@ -75,7 +73,11 @@ class AddingValueToDBService {
         }
     }
 
-    interface Handler {
+    interface InitialHandler {
+        void handle(FullContactData fullContactData, String data);
+    }
+
+    interface ConditionalHandler {
         Object getterHandler();
     }
 }
