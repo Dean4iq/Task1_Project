@@ -173,8 +173,10 @@ public class ContactFormServlet extends HttpServlet {
     private void addValueToList(HttpServletRequest req) {
         AddingValueToDBService.addRequestValueToDB(req, controller);
     }
+
+    interface Handler {
+        void handle(Object object);
+    }
 }
 
-interface Handler {
-    void handle(Object object);
-}
+

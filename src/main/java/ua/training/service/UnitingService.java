@@ -8,10 +8,30 @@ import ua.training.util.DBQueries;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class UnitingService {
     private static final Logger log = LogManager.getLogger(UnitingService.class);
+    private static Map<String, GetterHandler> checkNullsHandler;
+    private static String SQL_HEADER = "='";
+    private static String SQL_ENDING = "',";
+    private static FullContactData fullContactData;
+
+    static {
+        checkNullsHandler = new HashMap<>();
+
+        checkNullsHandler.put("name", () -> fullContactData.getName());
+        checkNullsHandler.put("lastname", () -> fullContactData.getLastName());
+        checkNullsHandler.put("nickname", () -> fullContactData.getNickname());
+        checkNullsHandler.put("phone", () -> fullContactData.getPhone());
+        checkNullsHandler.put("id", () -> fullContactData.getId());
+    }
+
+    private static void setFullContactData(FullContactData fullContactData) {
+        UnitingService.fullContactData = fullContactData;
+    }
 
     private UnitingService() {
     }
@@ -44,35 +64,21 @@ class UnitingService {
         StringBuilder stringBuilder = new StringBuilder()
                 .append(DBQueries.HEADER_UPDATE_ALL_COLUMNS);
 
-        if (fullContactData.getName() != null) {
-            stringBuilder.append("name = ").append("'")
-                    .append(fullContactData.getName().getContactDataField())
-                    .append("'").append(",");
-        }
-        if (fullContactData.getLastName() != null) {
-            stringBuilder.append("lastname = ").append("'")
-                    .append(fullContactData.getLastName().getContactDataField())
-                    .append("'").append(",");
-        }
-        if (fullContactData.getNickname() != null) {
-            stringBuilder.append("nickname = ").append("'")
-                    .append(fullContactData.getNickname().getContactDataField())
-                    .append("'").append(",");
-        }
-        if (fullContactData.getPhone() != null) {
-            stringBuilder.append("phone = ").append("'")
-                    .append(fullContactData.getPhone().getContactDataField())
-                    .append("'").append(",");
-        }
-        if (fullContactData.getId() != null) {
-            stringBuilder.append("id = ").append("'")
-                    .append(fullContactData.getId().getContactDataField())
-                    .append("'").append(",");
-        }
+        setFullContactData(fullContactData);
+
+        checkNullsHandler.entrySet().stream()
+                .filter(elem -> elem.getValue().handleGet() != null)
+                .forEach(elem -> stringBuilder
+                        .append(elem.getKey())
+                        .append(SQL_HEADER)
+                        .append(((ContactData) elem.getValue().handleGet()).getContactDataField())
+                        .append(SQL_ENDING));
 
         stringBuilder.deleteCharAt(stringBuilder.length() - 1)
                 .append(" where db_id = ").append(fullContactData.getRowId())
                 .append(";");
+
+        System.out.println(stringBuilder.toString());
 
         return stringBuilder.toString();
     }
@@ -110,9 +116,9 @@ class UnitingService {
                                            String setterMethod)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if (contactDataFirst.getClass().getMethod(getterMethod)
-                                        .invoke(contactDataFirst) == null
+                .invoke(contactDataFirst) == null
                 && contactDataSecond.getClass().getMethod(getterMethod)
-                                        .invoke(contactDataSecond) != null) {
+                .invoke(contactDataSecond) != null) {
             contactDataFirst.getClass()
                     .getMethod(setterMethod,
                             contactDataSecond.getClass().getMethod(getterMethod)
@@ -120,9 +126,9 @@ class UnitingService {
                     .invoke(contactDataFirst, contactDataSecond.getClass()
                             .getMethod(getterMethod).invoke(contactDataSecond));
         } else if (contactDataFirst.getClass().getMethod(getterMethod)
-                                        .invoke(contactDataFirst) != null
+                .invoke(contactDataFirst) != null
                 && contactDataSecond.getClass().getMethod(getterMethod)
-                                        .invoke(contactDataSecond) == null) {
+                .invoke(contactDataSecond) == null) {
             contactDataSecond.getClass()
                     .getMethod(setterMethod,
                             contactDataFirst.getClass().getMethod(getterMethod)
@@ -130,5 +136,9 @@ class UnitingService {
                     .invoke(contactDataSecond, contactDataFirst.getClass()
                             .getMethod(getterMethod).invoke(contactDataFirst));
         }
+    }
+
+    interface GetterHandler {
+        Object handleGet();
     }
 }
