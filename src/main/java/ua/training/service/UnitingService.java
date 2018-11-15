@@ -78,8 +78,6 @@ class UnitingService {
                 .append(" where db_id = ").append(fullContactData.getRowId())
                 .append(";");
 
-        System.out.println(stringBuilder.toString());
-
         return stringBuilder.toString();
     }
 
