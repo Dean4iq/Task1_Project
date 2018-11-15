@@ -4,8 +4,12 @@ import ua.training.model.*;
 import ua.training.util.DBQueries;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 class AddingValueToDBService {
+    private static Map<String, Handler> handlerMap = new HashMap<>();
+
     private AddingValueToDBService() {
     }
 
@@ -16,6 +20,7 @@ class AddingValueToDBService {
         final String nickname = request.getParameter("nickname");
         final String phone = request.getParameter("phone");
         final String id = request.getParameter("id");
+
 
         if (!name.equals("") || !lastName.equals("") || !nickname.equals("")
                 || !phone.equals("") || !id.equals("")) {
@@ -41,40 +46,36 @@ class AddingValueToDBService {
                 StringBuilder query = new StringBuilder().append(DBQueries.HEADER_INSERT_TO_DB);
                 StringBuilder queryValues = new StringBuilder().append("(");
 
-                if (fullContactData.getName() != null) {
-                    query.append("name,");
-                    queryValues.append("'").append(fullContactData.getName()).append("',");
-                }
-                if (fullContactData.getLastName() != null) {
-                    query.append("lastname,");
-                    queryValues.append("'").append(fullContactData.getLastName()).append("',");
-                }
-                if (fullContactData.getNickname() != null) {
-                    query.append("nickname,");
-                    queryValues.append("'").append(fullContactData.getNickname()).append("',");
-                }
-                if (fullContactData.getPhone() != null) {
-                    query.append("phone,");
-                    queryValues.append("'").append(fullContactData.getPhone()).append("',");
-                }
-                if (fullContactData.getId() != null) {
-                    query.append("id,");
-                    queryValues.append("'").append(fullContactData.getId()).append("',");
-                }
-                if (queryValues.lastIndexOf(",") == queryValues.length() - 1) {
-                    queryValues.deleteCharAt(queryValues.length() - 1);
-                }
-                if (query.lastIndexOf(",") == query.length() - 1) {
-                    query.deleteCharAt(query.length() - 1);
-                }
+                handlerMap.put("name", fullContactData::getName);
+                handlerMap.put("lastname", fullContactData::getLastName);
+                handlerMap.put("nickname", fullContactData::getNickname);
+                handlerMap.put("phone", fullContactData::getPhone);
+                handlerMap.put("id", fullContactData::getId);
+
+                handlerMap.entrySet().stream()
+                        .filter(elem -> elem.getValue().getterHandler() != null)
+                        .forEach(elem -> {
+                            query.append(elem.getKey()).append(",");
+                            queryValues.append("'")
+                                    .append(elem.getValue().getterHandler())
+                                    .append("',");
+                        });
+
+                queryValues.deleteCharAt(queryValues.length() - 1);
+                query.deleteCharAt(query.length() - 1);
                 query.append(")");
                 queryValues.append(")");
                 query.append(" VALUES ").append(queryValues);
 
+                System.out.println(query.toString());
                 controller.addContactToList(query.toString());
             } else {
                 CheckingRegExService.getWarnedRegexStrings(fullContactData, controller);
             }
         }
+    }
+
+    interface Handler {
+        Object getterHandler();
     }
 }
